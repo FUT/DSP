@@ -5,8 +5,8 @@ module Fourier
     W = 1900
     H = 1000
 
-    SX = 100.0
-    SY = 30.0
+    SX = 90.0
+    SY = 39.0
 
     attr_accessor :vis, :step
 
@@ -18,11 +18,13 @@ module Fourier
       draw_grid
     end
 
-    def draw(name, color)
-      data = pv.range(@range.begin, @range.end, @step).map do |x|
+    def to_array
+      pv.range(@range.begin, @range.end, @step).map do |x|
           OpenStruct.new({x: x, y: yield(x)})
       end
+    end
 
+    def draw(name, color, data)
       @vis.add(pv.Line).
         data(data).
         stroke_style(color).
@@ -37,6 +39,7 @@ module Fourier
         text_style(color)
 
       @label_pos.y += 30
+      data
     end
 
     def save(filename)
@@ -57,13 +60,13 @@ module Fourier
       @vis.add(pv.Rule).left(W / 2)
 
       @vis.add(pv.Rule).
-        data(Array(-5..5)).
+        data(pv.range(-200,200,10)).
         bottom(->(d){d * SY + H / 2}).
         width(10).
         add(pv.Label).left(W / 2)
 
       @vis.add(pv.Rule).
-        data(pv.range(-50,50,1)).
+        data(pv.range(-10,10,1)).
         height(10).
         left(->(d){d * SX + W / 2}).
         anchor('bottom').

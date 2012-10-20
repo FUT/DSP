@@ -1,3 +1,3 @@
 module Fourier
-  N = 32
+  N = 512
 end
