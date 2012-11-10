@@ -27,6 +27,7 @@ convoluted = FastTransform.fft values.map(&:y), false
 dots = values.each_with_index.map{|val, i| OpenStruct.new({x: val.x, y: convoluted[i].abs - 0.1})}
 plot.draw('FFT', 'green', dots)
 
+binding.pry
 deconvoluted = FastTransform.fft convoluted, true
 deconvoluted.map!{ |value| value / N }
 dots = values.each_with_index.map{|val, i| OpenStruct.new({x: val.x, y: deconvoluted[i].real - 0.1})}
