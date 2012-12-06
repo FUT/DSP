@@ -1,7 +1,7 @@
 require 'pry'
 require 'RMagick'
 
-img = Magick::Image.read('img.png').first
+img = Magick::Image.read('image.png').first
 
 def draw_hist(img, w=900, h=500, file='histogram.png')
   canvas = Magick::ImageList.new
@@ -26,19 +26,23 @@ def draw_hist(img, w=900, h=500, file='histogram.png')
   canvas.write(file)
 end
 
+#prepare images
 draw_hist img
+img.negate.write 'negated.png'
+img.median_filter(2).write 'median.png'
 
-def show_img
-  fill 'img.png'
-  rect 0, 0, 900, 500
+def show(file)
+  @buttons_x ||= 0
+  button file, left: @buttons_x, top: 510 do
+    fill "#{file}.png"
+    rect 0, 0, 900, 500
+  end
+  @buttons_x += 200
 end
 
-def show_hist
-  fill 'histogram.png'
-  rect 0, 0, 900, 500
-end
-
-Shoes.app height: 1000, width: 1800 do
-  show_img
-  show_hist
+Shoes.app height: 600, width: 900 do
+  show 'image'
+  show 'histogram'
+  show 'negated'
+  show 'median'
 end
