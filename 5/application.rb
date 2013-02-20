@@ -6,7 +6,7 @@ SQUARE = [[-1, 0], [-1, 1], [-1, -1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]]
 img = Magick::Image.read('image.jpg').first
 img.write 'result1.jpg'
 (med = img).write 'median.jpg' #img.median_filter(2)).write 'median.jpg'
-(@bin = med.threshold(Magick::MaxRGB * 0.75)).write 'binarized.jpg'
+(@bin = med.threshold(Magick::MaxRGB * 0.25)).write 'binarized.jpg'
 
 @result = Magick::Image.read('result1.jpg').first
 @result.each_pixel { |p, c, r| @result.pixel_color(c,r, 'white') }
@@ -36,9 +36,9 @@ def group(c, r, color = new_color)
   if in_group?(c, r)
     $stack << [c, r]
     curr_attr = {
-      mass: [0, 0],
-      count: 0,
-      p: 0,
+      mass: [1, 1],
+      count: 1,
+      p: 1,
       dots: []
     }
     $attrs << curr_attr
@@ -123,7 +123,7 @@ def near(all, m)
 end
 
 # $groups = $attrs.sample(3).map { |e| [e] }
-$groups = [[$attrs[0]], [$attrs[1]], [$attrs[6]]]
+$groups = [[$attrs[0]], [$attrs[1]], [$attrs[3]]]
 while $groups.flatten.count < $attrs.count
   el = ($attrs - $groups.flatten).first
 
